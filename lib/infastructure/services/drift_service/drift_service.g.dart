@@ -3,6 +3,145 @@
 part of 'drift_service.dart';
 
 // ignore_for_file: type=lint
+class $MedicineTable extends Medicine
+    with TableInfo<$MedicineTable, MedicineData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MedicineTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<String> amount = GeneratedColumn<String>(
+      'amount', aliasedName, false,
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 3),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+      'type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _timeMeta = const VerificationMeta('time');
+  @override
+  late final GeneratedColumn<DateTime> time = GeneratedColumn<DateTime>(
+      'time', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+      'date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _isNotifiedMeta =
+      const VerificationMeta('isNotified');
+  @override
+  late final GeneratedColumn<bool> isNotified =
+      GeneratedColumn<bool>('is_notified', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_notified" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, name, amount, type, time, date, isNotified];
+  @override
+  String get aliasedName => _alias ?? 'medicine';
+  @override
+  String get actualTableName => 'medicine';
+  @override
+  VerificationContext validateIntegrity(Insertable<MedicineData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(_amountMeta,
+          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
+    } else if (isInserting) {
+      context.missing(_typeMeta);
+    }
+    if (data.containsKey('time')) {
+      context.handle(
+          _timeMeta, time.isAcceptableOrUnknown(data['time']!, _timeMeta));
+    } else if (isInserting) {
+      context.missing(_timeMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('is_notified')) {
+      context.handle(
+          _isNotifiedMeta,
+          isNotified.isAcceptableOrUnknown(
+              data['is_notified']!, _isNotifiedMeta));
+    } else if (isInserting) {
+      context.missing(_isNotifiedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MedicineData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MedicineData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}amount'])!,
+      type: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
+      time: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}time'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      isNotified: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_notified'])!,
+    );
+  }
+
+  @override
+  $MedicineTable createAlias(String alias) {
+    return $MedicineTable(attachedDatabase, alias);
+  }
+}
+
 class MedicineData extends DataClass implements Insertable<MedicineData> {
   final int id;
   final String name;
@@ -227,145 +366,6 @@ class MedicineCompanion extends UpdateCompanion<MedicineData> {
           ..write('isNotified: $isNotified')
           ..write(')'))
         .toString();
-  }
-}
-
-class $MedicineTable extends Medicine
-    with TableInfo<$MedicineTable, MedicineData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $MedicineTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
-  @override
-  late final GeneratedColumn<String> amount = GeneratedColumn<String>(
-      'amount', aliasedName, false,
-      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 3),
-      type: DriftSqlType.string,
-      requiredDuringInsert: true);
-  static const VerificationMeta _typeMeta = const VerificationMeta('type');
-  @override
-  late final GeneratedColumn<String> type = GeneratedColumn<String>(
-      'type', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _timeMeta = const VerificationMeta('time');
-  @override
-  late final GeneratedColumn<DateTime> time = GeneratedColumn<DateTime>(
-      'time', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _dateMeta = const VerificationMeta('date');
-  @override
-  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
-      'date', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _isNotifiedMeta =
-      const VerificationMeta('isNotified');
-  @override
-  late final GeneratedColumn<bool> isNotified =
-      GeneratedColumn<bool>('is_notified', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_notified" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, name, amount, type, time, date, isNotified];
-  @override
-  String get aliasedName => _alias ?? 'medicine';
-  @override
-  String get actualTableName => 'medicine';
-  @override
-  VerificationContext validateIntegrity(Insertable<MedicineData> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('amount')) {
-      context.handle(_amountMeta,
-          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
-    if (data.containsKey('type')) {
-      context.handle(
-          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
-    } else if (isInserting) {
-      context.missing(_typeMeta);
-    }
-    if (data.containsKey('time')) {
-      context.handle(
-          _timeMeta, time.isAcceptableOrUnknown(data['time']!, _timeMeta));
-    } else if (isInserting) {
-      context.missing(_timeMeta);
-    }
-    if (data.containsKey('date')) {
-      context.handle(
-          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
-    } else if (isInserting) {
-      context.missing(_dateMeta);
-    }
-    if (data.containsKey('is_notified')) {
-      context.handle(
-          _isNotifiedMeta,
-          isNotified.isAcceptableOrUnknown(
-              data['is_notified']!, _isNotifiedMeta));
-    } else if (isInserting) {
-      context.missing(_isNotifiedMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  MedicineData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return MedicineData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      amount: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}amount'])!,
-      type: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
-      time: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}time'])!,
-      date: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
-      isNotified: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_notified'])!,
-    );
-  }
-
-  @override
-  $MedicineTable createAlias(String alias) {
-    return $MedicineTable(attachedDatabase, alias);
   }
 }
 
