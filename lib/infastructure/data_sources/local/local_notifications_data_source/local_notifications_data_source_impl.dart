@@ -63,7 +63,7 @@ class LocalNotificationsDataSourceImpl implements LocalNotificationsDataSource {
       notificationDetails,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
+      androidScheduleMode:    AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 
